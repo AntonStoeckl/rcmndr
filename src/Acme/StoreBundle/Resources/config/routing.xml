@@ -7,4 +7,12 @@
     <route id="acme_store_homepage" pattern="/hello/{name}">
         <default key="_controller">AcmeStoreBundle:Default:index</default>
     </route>
+
+    <route id="acme_store_create" pattern="/acmestore/create">
+        <default key="_controller">AcmeStoreBundle:Default:create</default>
+    </route>
+
+    <route id="acme_store_show" pattern="/acmestore/show/{id}">
+        <default key="_controller">AcmeStoreBundle:Default:show</default>
+    </route>
 </routes>
