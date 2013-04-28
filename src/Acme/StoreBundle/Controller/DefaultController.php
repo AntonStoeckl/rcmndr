@@ -2,28 +2,38 @@
 
 namespace Acme\StoreBundle\Controller;
 
+use Doctrine\Common\Util\Debug;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Acme\StoreBundle\Document\Product;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
-    public function indexAction($name)
+    public function indexAction()
     {
-        return $this->render('AcmeStoreBundle:Default:index.html.twig', array('name' => $name));
+        /** @var $dm \Doctrine\ODM\MongoDB\DocumentManager */
+        $dm = $this->get('doctrine_mongodb')->getManager();
+
+        /** @var $repository \Acme\StoreBundle\Repository\ProductRepository */
+        $repository = $dm->getRepository('AcmeStoreBundle:Product');
+
+        $products = $repository->findAllOrderedByName();
+
+        return $this->render('AcmeStoreBundle:Default:index.html.twig', array('products' => $products));
     }
 
-    public function createAction()
+    public function createAction($name, $price)
     {
         $product = new Product();
-        $product->setName('A Foo Bar');
-        $product->setPrice('19.99');
+        $product->setName($name);
+        $product->setPrice($price);
 
+        /** @var $dm \Doctrine\ODM\MongoDB\DocumentManager */
         $dm = $this->get('doctrine_mongodb')->getManager();
         $dm->persist($product);
         $dm->flush();
 
-        return new Response('Created product id ' . $product->getId());
+        return $this->redirect($this->generateUrl('acme_store_show', array('id' => $product->getId())));
     }
 
     public function showAction($id)
@@ -37,7 +47,25 @@ class DefaultController extends Controller
             throw $this->createNotFoundException('No product found for id '.$id);
         }
 
-        return new Response('Found product: ' . $product->getId() . ' ' . $product->getName());
+        return $this->render('AcmeStoreBundle:Default:show.html.twig', array('product' => $product));
+    }
+
+    public function updateAction($id, $name)
+    {
+        /** @var $dm \Doctrine\ODM\MongoDB\DocumentManager */
+        $dm = $this->get('doctrine_mongodb')->getManager();
+
+        /** @var $product Product */
+        $product = $dm->getRepository('AcmeStoreBundle:Product')->find($id);
+
+        if (!$product) {
+            throw $this->createNotFoundException('No product found for id ' . $id);
+        }
+
+        $product->setName($name);
+        $dm->flush();
+
+        return $this->redirect($this->generateUrl('acme_store_show', array('id' => $id)));
     }
 }
 

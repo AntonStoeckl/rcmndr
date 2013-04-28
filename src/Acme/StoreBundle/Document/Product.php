@@ -5,7 +5,7 @@ namespace Acme\StoreBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
- * @MongoDB\Document
+ * @MongoDB\Document(repositoryClass="Acme\StoreBundle\Repository\ProductRepository")
  */
 class Product
 {

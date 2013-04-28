@@ -4,15 +4,19 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-    <route id="acme_store_homepage" pattern="/hello/{name}">
+    <route id="acme_store_homepage" pattern="/acmestore/">
         <default key="_controller">AcmeStoreBundle:Default:index</default>
     </route>
 
-    <route id="acme_store_create" pattern="/acmestore/create">
+    <route id="acme_store_create" pattern="/acmestore/create/{name}/{price}">
         <default key="_controller">AcmeStoreBundle:Default:create</default>
     </route>
 
     <route id="acme_store_show" pattern="/acmestore/show/{id}">
         <default key="_controller">AcmeStoreBundle:Default:show</default>
+    </route>
+
+    <route id="acme_store_update" pattern="/acmestore/update/{id}/{name}">
+        <default key="_controller">AcmeStoreBundle:Default:update</default>
     </route>
 </routes>
